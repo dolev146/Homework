@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get Orders</title>
+    <style>
+        body {
+            display: flex;
+        }
+
+        table {
+            width: 90%;
+            border-spacing: 5px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        #left{
+            border-right: 4mm ridge rgb(170, 50, 220, .6);
+            padding-right: 4rem;
+        }
+        #right{
+            padding-top: 5%;
+            padding-left: 3%;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="left">
+        <header>
+            <h1>
+                costomurs list
+            </h1>
+            <main>
+                <table>
+                    <tr>
+                        <th> customerId </th>
+                    </tr>
+                    <tbody id="list">
+                    </tbody>
+                </table>
+            </main>
+        </header>
+    </section>
+
+    <section id="right">
+        <header>
+
+        </header>
+    </section>
+    <script>
+        let xhr = new XMLHttpRequest();
+
+        xhr.onload = function () {
+            foreach()
+        }
+
+        function foreach() {
+            let users = JSON.parse(xhr.responseText)
+            let list = document.querySelector("#list")
+            users.forEach(user => {
+                list.innerHTML += `
+                <tr>
+                <td>${user.id}</td>
+                </tr>`
+            })
+        }
+
+        xhr.open('GET', 'https://northwind.now.sh/api/customers');
+        xhr.send()
+
+        list.addEventListener("click", function (e) {
+            let req = e.target.innerText
+            let xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', `https://northwind.now.sh/api/orders?customerId=${req}`);
+            console.log(`https://northwind.now.sh/api/orders?customerId=${req}`)
+            xhr2.send()
+            xhr2.onload = function () {
+                let information = JSON.parse(xhr2.responseText)
+                let rightList = document.querySelector("#right > header")
+                information.forEach(info => {
+                rightList.innerHTML = `
+                <div>
+                    <div>
+                    customerId: ${info.customerId}
+                    </div>
+                    <div>
+                    details: ${JSON.stringify(info.details)} 
+                    </div>
+                    <div>
+                    employeeId: ${info.employeeId}
+                    </div>
+                    <div>
+                    freight: ${info.freight}
+                    </div>
+                    <div>
+                    id: ${info.id}
+                    </div>
+                    <div>
+                    orderDate: ${info.orderDate}
+                    </div>
+                    <div>
+                    requiredDate: ${info.requiredDate}
+                    </div>
+                    <div>
+                    shipAddress: ${JSON.stringify(info.shipAddress)}
+                    </div>
+                    <div>
+                    shipName: ${info.shipName}
+                    </div>
+                    <div>
+                    shipVia: ${info.shipVia}
+                    </div>
+                    <div>
+                    shippedDate: ${info.shippedDate}
+                    </div>
+                </div>`
+                })
+            }
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>
